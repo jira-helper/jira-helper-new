@@ -51,6 +51,13 @@ export class PageModification {
     return promise;
   }
 
+  /**
+   * Waits for first element matching one of the selectors
+   */
+  waitForFirstElement(selectors, container){
+    return Promise.race(selectors.map(selector => this.waitForElement(selector, container)));
+  }
+
   getBoardProperty(property) {
     const { cancelRequest, abortPromise } = this.createAbortPromise();
     this.sideEffects.push(cancelRequest);
@@ -139,28 +146,34 @@ export class PageModification {
   }
 
   insertHTML(container, position, html) {
-    container.insertAdjacentHTML(position, html.trim());
+    try {
+      container.insertAdjacentHTML(position, html.trim());
 
-    let insertedElement;
-    switch (position) {
-      case 'beforebegin':
-        insertedElement = container.previousElementSibling;
-        break;
-      case 'afterbegin':
-        insertedElement = container.firstElementChild;
-        break;
-      case 'beforeend':
-        insertedElement = container.lastElementChild;
-        break;
-      case 'afterend':
-        insertedElement = container.nextElementSibling;
-        break;
-      default:
-        throw Error('Wrong position');
+      let insertedElement;
+      switch (position) {
+        case 'beforebegin':
+          insertedElement = container.previousElementSibling;
+          break;
+        case 'afterbegin':
+          insertedElement = container.firstElementChild;
+          break;
+        case 'beforeend':
+          insertedElement = container.lastElementChild;
+          break;
+        case 'afterend':
+          insertedElement = container.nextElementSibling;
+          break;
+        default:
+          throw Error('Wrong position');
+      }
+
+      this.sideEffects.push(() => insertedElement.remove());
+      return insertedElement;
+    } catch(e){
+      console.error(`jira-helper: Insertion error: `, e);
+      console.error(`jira-helper: `, container, position, html);
+      throw e;
     }
-
-    this.sideEffects.push(() => insertedElement.remove());
-    return insertedElement;
   }
 
   setDataAttr(element, attr, value) {
