@@ -8,6 +8,7 @@ import {
   getBoardConfiguration,
   updateBoardProperty,
   searchIssues,
+  getLatestForBoard,
 } from './jiraApi';
 
 export class PageModification {
@@ -87,6 +88,22 @@ export class PageModification {
     this.sideEffects.push(cancelRequest);
 
     return getBoardEditData(getBoardIdFromURL(), { abortPromise });
+  }
+
+  getBoardLatest() {
+    const { cancelRequest, abortPromise } = this.createAbortPromise();
+    this.sideEffects.push(cancelRequest);
+
+    return getLatestForBoard(getBoardIdFromURL(), {
+      abortPromise,
+      query: {
+        hideCardExtraFields: true,
+        includeHidden: false,
+        moduleKey: 'agile-mobile-board-service',
+        skipEtag: false,
+        skipExtraFields: true,
+      },
+    });
   }
 
   getBoardEstimationData() {

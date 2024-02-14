@@ -21,6 +21,7 @@ const boardPropertiesUrl = boardId => `agile/1.0/board/${boardId}/properties`;
 const boardConfigurationURL = boardId => `agile/1.0/board/${boardId}/configuration`;
 const boardEditDataURL = 'greenhopper/1.0/rapidviewconfig/editmodel.json?rapidViewId=';
 const boardEstimationDataURL = 'greenhopper/1.0/rapidviewconfig/estimation.json?rapidViewId=';
+const boardLatestURL = boardId => `boards/latest/board/${boardId}`;
 
 const invalidatedProperties = {};
 
@@ -136,6 +137,17 @@ export const searchIssues = (jql, params = {}) =>
     type: 'json',
     ...params,
   });
+
+export const getLatestForBoard = (boardId, params = {}) => {
+  return requestJira({
+    url: boardLatestURL(boardId),
+    type: 'json',
+    memoryCache: true,
+    memoryCacheTtl: 1000,
+    memoryCacheForce: true,
+    ...params,
+  });
+};
 
 export const loadNewIssueViewEnabled = (params = {}) =>
   requestJira({
