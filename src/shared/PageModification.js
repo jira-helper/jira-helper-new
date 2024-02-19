@@ -140,7 +140,7 @@ export class PageModification {
     this.sideEffects.push(() => target.removeEventListener(event, cb));
   };
 
-  onDOMChange(selector, cb, params = { childList: true }) {
+  onDOMChange(selector, cb, params = { childList: true, subtree: false, }) {
     const element = document.querySelector(selector);
     if (!element) return;
 
