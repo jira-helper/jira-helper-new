@@ -140,12 +140,20 @@ export class PageModification {
     this.sideEffects.push(() => target.removeEventListener(event, cb));
   };
 
+  /**
+   * @param selector
+   * @param cb
+   * @param {import('lib.dom.d.ts').MutationObserverInit} params
+   */
   onDOMChange(selector, cb, params = { childList: true, subtree: false, }) {
-    const element = document.querySelector(selector);
-    if (!element) return;
+    const elements = document.querySelectorAll(selector);
+
+    if (!elements || !elements.length) return;
 
     const observer = new MutationObserver(cb);
-    observer.observe(element, params);
+    elements.forEach(element => {
+      observer.observe(element, params);
+    });
     this.sideEffects.push(() => observer.disconnect());
   }
 

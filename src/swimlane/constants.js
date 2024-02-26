@@ -11,6 +11,14 @@ export const settingsJiraDOM = {
   swimlane: '.ghx-swimlane',
   swimlaneHeaderContainer: '.ghx-swimlane-header',
   swimlaneHeader: '.ghx-heading',
+  // swimlane row contents
+  swimlaneCloud: '[data-test-id="platform-board-kit.ui.swimlane.swimlane-wrapper"]',
+  // swimlane row name
+  swimlaneHeaderContainerCloud: '[data-testid="platform-board-kit.ui.swimlane.summary-section"]',
+  // board with all swimlanes
+  swimlaneCloudWrapper: `[data-testid="platform-board-kit.ui.board.scroll.board-scroll"]`,
+  // swimlane header content (name, issue count)
+  swimlaneContentCloud: `[data-testid="platform-board-kit.ui.swimlane.swimlane-content"]`,
 };
 
 export const settingsEditBtnTemplate = btnId => `<div style="margin-top: 1rem">
