@@ -19,6 +19,8 @@ export const settingsJiraDOM = {
   swimlaneCloudWrapper: `[data-testid="platform-board-kit.ui.board.scroll.board-scroll"]`,
   // swimlane header content (name, issue count)
   swimlaneContentCloud: `[data-testid="platform-board-kit.ui.swimlane.swimlane-content"]`,
+  // swimlane container for entire column with issues
+  swimlaneColumnCloud: `[data-testid="platform-board-kit.ui.column.draggable-column.styled-wrapper"]`,
 };
 
 export const settingsEditBtnTemplate = btnId => `<div style="margin-top: 1rem">
