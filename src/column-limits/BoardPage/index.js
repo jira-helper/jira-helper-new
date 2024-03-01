@@ -166,21 +166,19 @@ export default class ColumnLimitsBoardPage extends PageModification {
             0
         );
 
-        if (amountOfGroupTasks > groupLimit) {
-          groupColumns.forEach(groupColumnId => {
-            const index = boardLatest?.columns?.findIndex(column => {
-              return String(column.id) === String(groupColumnId);
-            });
-            if (index > -1) {
-              const insertedElement = this.insertHTML(columnElements[index], 'beforeend', boardPageColumnHeaderBadge({
-                isCloud: true,
-                amountOfGroupTasks,
-                groupLimit,
-              }));
-              this.insertedBadges.push(insertedElement);
-            }
+        groupColumns.forEach(groupColumnId => {
+          const index = boardLatest?.columns?.findIndex(column => {
+            return String(column.id) === String(groupColumnId);
           });
-        }
+          if (index > -1) {
+            const insertedElement = this.insertHTML(columnElements[index], 'beforeend', boardPageColumnHeaderBadge({
+              isCloud: true,
+              amountOfGroupTasks,
+              groupLimit,
+            }));
+            this.insertedBadges.push(insertedElement);
+          }
+        });
       });
     }
 
