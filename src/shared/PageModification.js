@@ -8,6 +8,7 @@ import {
   getBoardConfiguration,
   updateBoardProperty,
   searchIssues,
+  getLatestForBoard,
 } from './jiraApi';
 
 export class PageModification {
@@ -89,6 +90,22 @@ export class PageModification {
     return getBoardEditData(getBoardIdFromURL(), { abortPromise });
   }
 
+  getBoardLatest() {
+    const { cancelRequest, abortPromise } = this.createAbortPromise();
+    this.sideEffects.push(cancelRequest);
+
+    return getLatestForBoard(getBoardIdFromURL(), {
+      abortPromise,
+      query: {
+        hideCardExtraFields: true,
+        includeHidden: false,
+        moduleKey: 'agile-mobile-board-service',
+        skipEtag: false,
+        skipExtraFields: true,
+      },
+    });
+  }
+
   getBoardEstimationData() {
     const { cancelRequest, abortPromise } = this.createAbortPromise();
     this.sideEffects.push(cancelRequest);
@@ -123,12 +140,20 @@ export class PageModification {
     this.sideEffects.push(() => target.removeEventListener(event, cb));
   };
 
-  onDOMChange(selector, cb, params = { childList: true }) {
-    const element = document.querySelector(selector);
-    if (!element) return;
+  /**
+   * @param selector
+   * @param cb
+   * @param {import('lib.dom.d.ts').MutationObserverInit} params
+   */
+  onDOMChange(selector, cb, params = { childList: true, subtree: false, }) {
+    const elements = document.querySelectorAll(selector);
+
+    if (!elements || !elements.length) return;
 
     const observer = new MutationObserver(cb);
-    observer.observe(element, params);
+    elements.forEach(element => {
+      observer.observe(element, params);
+    });
     this.sideEffects.push(() => observer.disconnect());
   }
 
